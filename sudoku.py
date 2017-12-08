@@ -1,6 +1,7 @@
 import turtle
 import random
 
+
 turtle.title('Python Turtle Sudoku')
 # --------------- Made this function to set our coordinates and environment whenever we play ------------- #
 def setWorld():
@@ -33,36 +34,39 @@ def drawSquare():
 # ------------- A function to keep drawing squares and moving forward until it reaches a specific x-coordinate --------#
 def move_turtle():
     turtle.pd()
-    while not (turtle.xcor() >= 75):
+    while not (turtle.xcor() >= 180):
         drawSquare()
-        turtle.setx(turtle.xcor() + 37.5)
+        turtle.setx(turtle.xcor() + 40)
 
 
 # ---------------- 'move_turtle()' draws squares in one row.  ---------------------- #
 def make_box():
     row_boxes = 0
-    turtle.sety(-37.5)
-    while row_boxes != 4:
+    turtle.sety(-140)
+    while row_boxes != 9:
         move_turtle()
-        turtle.setx(-75)  # Start making boxes from the left for each row
+        turtle.setx(-180)  # Start making boxes from the left for each row
         turtle.sety(
-            turtle.ycor() + 37.5)  # Once boxes are filled in one row, move y coordinate up. E.g (Makes boxes along row 'D', now  move up
+            turtle.ycor() + 40)  # Once boxes are filled in one row, move y coordinate up. E.g (Makes boxes along row 'D', now  move up
         row_boxes += 1  # Do this until boxes are made in all four rows.
+    turtle.color('white')
+    turtle.fd(38.5)
+    turtle.color('black')
     turtle.pu()
 
 
 # ------------- A function to label the grid -------------- #
 def labelGrid():
-    rows = ['A', 'B', 'C', 'D']
-    cols = ['1', '2', '3', '4']
+    rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    cols = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     for row_name in rows:
-        turtle.write(row_name, move=False, align='left', font=('Georgia', 40, 'normal'))
+        turtle.write(row_name, move=False, align='left', font=('Arial', 20, 'bold'))
         turtle.sety(turtle.ycor() - 40)
 
-    turtle.goto(-65, 75)
+    turtle.goto(-165, 185)
     for col_name in cols:
-        turtle.write(col_name, move=False, align='left', font=('Georgia', 40, 'normal'))
+        turtle.write(col_name, move=False, align='left', font=('Arial', 20, 'bold'))
         turtle.setx(turtle.xcor() + 40)
 
 
@@ -89,11 +93,11 @@ def eraseEntry(puzzle):
 
 
 def take_input(puzzle):
-    grid_rows = ['A', 'B', 'C', 'D']
-    grid_cols = ['1', '2', '3', '4']
+    grid_rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    grid_cols = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-    col_increment_size = [-60, -30, 10, 50]
-    row_increment_size = [50, 10, -30, -60]
+    col_increment_size = [-165, -125, -85, -45, -5, 35, 75, 115, 155]
+    row_increment_size = [150, 110, 70, 30, -10, -50, -90, -130, -170]
 
     user_input = turtle.textinput('', 'Enter Row and Column (e.g B4)')
 
@@ -121,7 +125,7 @@ def take_input(puzzle):
                     if puzzle[i][j] != 0:  # Call the eraseEntry function and ask
                         eraseEntry(puzzle)  # Ask the user if they want to erase the entry where there isn't a zero
                     puzzle[i][j] = int(get_input)
-                    make_move = turtle.write(get_input, move=False, align='left', font=('Arial', 35, 'normal'))
+                    make_move = turtle.write(get_input, move=False, align='left', font=('Arial', 20, 'normal'))
 
     return puzzle
 
@@ -132,14 +136,18 @@ def populatePuzzle(puzzle):
     Returns the grid with the initial numbers inside
     '''
 
-    col_increment_size = [-60, -30, 10, 50]  # Starts at A1 (-60,50), A2 (-30,50), A3 (10,50) .... D4 (50,-60)
-    row_increment_size = [50, 10, -30, -60]
+    col_increment_size = [-165, -125, -85, -45, -5, 35, 75, 115, 155]
+    row_increment_size = [150, 110, 70, 30, -10, -50, -90, -130, -170]
+    #col_increment_size = [-60, -30, 10, 50]  # Starts at A1 (-60,50), A2 (-30,50), A3 (10,50) .... D4 (50,-60)
+    #row_increment_size = [50, 10, -30, -60]
 
     for row in range(0, len(puzzle)):  # Enter the row
         for col in range(0, len(puzzle[row])):  # Enter the the row and which column the element belongs to
             if puzzle[row][col] != 0:  # If the initial base is not 0, populate the grid
                 turtle.goto(col_increment_size[col], row_increment_size[row])
-                turtle.write(puzzle[row][col], move=False, align='left', font=('Arial', 35, 'normal'))
+                turtle.color('blue')
+                turtle.write(puzzle[row][col], move=False, align='left', font=('Arial', 20, 'normal'))
+                turtle.color('black')
 
 
 def row_check(puzzle):
@@ -154,7 +162,7 @@ def row_check(puzzle):
             row]:  # Using the notion of sets, we look at the length of each row
             check += 1  # Check keeps track of how many rows (same for columns and box)
             # are unique. If all 4 are unique, return True.
-    if check == 4:
+    if check == 9:
         return True
 
     else:
@@ -171,14 +179,19 @@ def col_check(puzzle):
     col_2 = [s[1] for s in puzzle]  # so for example. col_1 = [A1, B1, C1, D1], col_2 = [A2, B2, C2, D2] and so on.
     col_3 = [s[2] for s in puzzle]  # After the transformation is done, it applies the checker. The checker looks
     col_4 = [s[3] for s in puzzle]  # at the length of each column. If every number is unique len(set(col_1)) = 4 and
-    all_col = [col_1, col_2, col_3, col_4]  # if that matches with our actual column return True.
+    col_5 = [s[4] for s in puzzle]
+    col_6 = [s[5] for s in puzzle]
+    col_7 = [s[6] for s in puzzle]
+    col_8 = [s[7] for s in puzzle]
+    col_9 = [s[8] for s in puzzle]
+    all_col = [col_1, col_2, col_3, col_4, col_5, col_6, col_7, col_8, col_9]  # if that matches with our actual column return True.
 
     check = 0
     for col in range(0, len(all_col)):
         if len(all_col[col]) == len(set(puzzle[col])) and 0 not in all_col:
             check += 1
 
-    if check == 4:  # 4 because 4 columns
+    if check == 9:  # 4 because 4 columns
         return True
 
     else:
@@ -191,13 +204,18 @@ def box_check(puzzle):
     Rearragnes the puzzle so that each 'row' is a box.
     '''
 
-    box_1 = [s[0:2] for s in
-             puzzle[0:2]]  # Transforming each row of the puzzle so that all elements are rearranged as boxes
-    box_2 = [s[2:] for s in puzzle[0:2]]  # so for example, box_1 = [A1,A2,B1,B2], box_2 = [A3,A4,B3,B4] and so on
-    box_3 = [s[0:2] for s in puzzle[2:]]
-    box_4 = [s[2:] for s in puzzle[2:]]
+    box_1 = [s[0:3] for s in
+             puzzle[0:3]]  # Transforming each row of the puzzle so that all elements are rearranged as boxes
+    box_2 = [s[0:3] for s in puzzle[3:6]]  # so for example, box_1 = [A1,A2,B1,B2], box_2 = [A3,A4,B3,B4] and so on
+    box_3 = [s[0:3] for s in puzzle[6:]]
+    box_4 = [s[3:6] for s in puzzle[0:3]]
+    box_5 = [s[3:6] for s in puzzle[3:6]]
+    box_6 = [s[3:6] for s in puzzle[6:]]
+    box_7 = [s[6:] for s in puzzle[0:3]]
+    box_8 = [s[6:] for s in puzzle[3:6]]
+    box_9 = [s[6:] for s in puzzle[6:]]
 
-    all_box = [box_1, box_2, box_3, box_4]
+    all_box = [box_1, box_2, box_3, box_4, box_5, box_6, box_7, box_8, box_9]
 
     check = 0
 
@@ -205,7 +223,7 @@ def box_check(puzzle):
         if len(box[0] + box[1]) == len(set(box[0] + box[1])) and 0 not in box[0] + box[1]:
             check += 1
 
-    if check == 4:
+    if check == 9:
         return True
 
 
@@ -236,19 +254,21 @@ def replay():
 
 
 # ------------------- Pick one of these random puzzles to start the game --------------------------- #
+puzzle_1 = [[3, 0, 0, 0, 2, 0, 0, 8, 0], [0, 0, 7, 0, 0, 4, 1, 6, 0], [0, 0, 6 , 0, 1, 0, 0, 0, 7], [0, 6, 0, 0, 3, 9, 0, 5 ,0], [9, 0, 0, 7, 0, 0, 0, 0, 8], [0, 3 ,0, 8, 0, 0, 0, 2 ,0], [6, 0, 0, 0, 9, 0 ,8 ,0 ,0], [0, 1, 4, 3, 0, 0, 5, 0, 0], [0, 2, 0, 0, 7 , 0, 0, 0, 1]]
 
-puzzle_1 = [[3, 4, 1, 2], [0, 0, 0, 0], [0, 0, 0, 0],
-            [4, 2, 3, 1]]  # Solution: [[3,4,1,2],[2,1,4,3],[1,3,2,4],[4,2,3,1]]
-puzzle_2 = [[4, 0, 0, 1], [0, 1, 3, 0], [0, 4, 1, 0],
-            [1, 0, 0, 3]]  # Solution: [[4,3,2,1],[2,1,3,4],[3,4,1,2],[1,2,4,3]]
-puzzle_3 = [[0, 0, 0, 0], [2, 3, 4, 1], [3, 4, 1, 2],
-            [0, 0, 0, 0]]  # Solution: [[4,1,2,3],[2,3,4,1],[3,4,1,2],[1,2,3,4]]
-puzzle_4 = [[0, 2, 4, 0], [1, 0, 0, 3], [4, 0, 0, 2],
-            [0, 1, 3, 0]]  # Solution: [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
-puzzle_5 = [[0, 4, 2, 0], [2, 0, 0, 0], [0, 0, 0, 3],
-            [0, 3, 1, 0]]  # Solution: [[3,4,2,1],[2,1,3,4],[1,2,4,3],[4,3,1,2]]
+all_puzzles = [puzzle_1]
+#puzzle_1 = [[3, 4, 1, 2], [0, 0, 0, 0], [0, 0, 0, 0],
+            #[4, 2, 3, 1]]  # Solution: [[3,4,1,2],[2,1,4,3],[1,3,2,4],[4,2,3,1]]
+#puzzle_2 = [[4, 0, 0, 1], [0, 1, 3, 0], [0, 4, 1, 0],
+            #[1, 0, 0, 3]]  # Solution: [[4,3,2,1],[2,1,3,4],[3,4,1,2],[1,2,4,3]]
+#puzzle_3 = [[0, 0, 0, 0], [2, 3, 4, 1], [3, 4, 1, 2],
+            #[0, 0, 0, 0]]  # Solution: [[4,1,2,3],[2,3,4,1],[3,4,1,2],[1,2,3,4]]
+#puzzle_4 = [[0, 2, 4, 0], [1, 0, 0, 3], [4, 0, 0, 2],
+            #[0, 1, 3, 0]]  # Solution: [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
+#puzzle_5 = [[0, 4, 2, 0], [2, 0, 0, 0], [0, 0, 0, 3],
+            #[0, 3, 1, 0]]  # Solution: [[3,4,2,1],[2,1,3,4],[1,2,4,3],[4,3,1,2]]
 
-all_puzzles = [puzzle_1, puzzle_2, puzzle_3, puzzle_4, puzzle_5]
+#all_puzzles = [puzzle_1, puzzle_2, puzzle_3, puzzle_4, puzzle_5]
 
 # ---------------------------------------------   Start the game   ---------------------------------------------------------- #
 
@@ -261,24 +281,33 @@ while True:
 
     # --------- Draw the lines in bold, across and down -------- #
     turtle.pu()
-    turtle.goto(-75, 0)
+    turtle.goto(-180, 60)
     turtle.pd()
-    turtle.fd(150)
+    turtle.fd(360)
     turtle.pu()
-    turtle.goto(0, 75)
-    turtle.lt(270)
+    turtle.goto(-180, -60)
     turtle.pd()
-    turtle.fd(150)
+    turtle.fd(360)
+    turtle.pu()
+    turtle.lt(90)
+    turtle.goto(-60,-180)
+    turtle.pd()
+    turtle.fd(360)
+    turtle.pu()
+    turtle.goto(60,-180)
+    turtle.pd()
+    turtle.fd(360)
+    turtle.lt(180)
     turtle.pu()
 
     # -------- Make the turtle go to the left ------------- #
-    turtle.goto(-75, -75)
+    turtle.goto(-180, -180)
 
     turtle.pensize(2)
     make_box()
-    turtle.goto(-95, 45)  # Start by going to the left top of the grid (Labeling starts with 'A', 'B'... etc)
+    turtle.goto(-200, 150)  # Start by going to the left top of the grid (Labeling starts with 'A', 'B'... etc)
     labelGrid()
-    game_puzzle = all_puzzles[random.randint(0, 4)]  # Pick a random puzzle to start the game
+    game_puzzle = all_puzzles[0]  # Need to Change!!!!! Pick a random puzzle to start the game
     populatePuzzle(game_puzzle)
 
     while game_won != True:
