@@ -1,32 +1,32 @@
 import turtle
 import random
 
-
+turtle.title('Python Turtle Sudoku')
 # --------------- Made this function to set our coordinates and environment whenever we play ------------- #
 def setWorld():
-    turtle.setworldcoordinates(-100, -100, 100, 100)
+    turtle.setworldcoordinates(-200, -200, 200, 200)
     turtle.hideturtle()
-    turtle.pensize(10)
+    turtle.pensize(5)
     turtle.speed(0)
     turtle.pu()
-    turtle.goto(-75, -75)
+    turtle.goto(-180, -180)
 
 
 # ------------ A function to draw the outer large square ------------- #
 def drawGrid():
     for i in range(2):
-        turtle.fd(150)
+        turtle.fd(360)
         turtle.lt(90)
-        turtle.fd(150)
+        turtle.fd(360)
         turtle.lt(90)
 
 
 # ------------ A function to draw squares within the grid ---------#
 def drawSquare():
     for i in range(2):
-        turtle.fd(37.5)
+        turtle.fd(40)
         turtle.lt(90)
-        turtle.fd(37.5)
+        turtle.fd(40)
         turtle.lt(90)
 
 
